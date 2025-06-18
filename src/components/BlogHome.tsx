@@ -7,17 +7,30 @@ import { Media } from './Media'
 export function BlogHome() {
   const [blogPosts, setBlogPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        console.log('📝 BlogHome: Fetching posts from API...')
+        setLoading(true)
+        setError(null)
+        
         const response = await fetch('/api/blog')
+        console.log('📝 BlogHome: API response status:', response.status)
+        
         if (response.ok) {
           const posts = await response.json()
+          console.log('📝 BlogHome: Received posts:', posts.length, posts)
           setBlogPosts(posts)
+        } else {
+          const errorData = await response.json()
+          console.error('📝 BlogHome: API error:', errorData)
+          setError(`API Error: ${errorData.error || response.statusText}`)
         }
       } catch (error) {
-        console.error('Error fetching blog posts:', error)
+        console.error('📝 BlogHome: Fetch error:', error)
+        setError(`Network Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       } finally {
         setLoading(false)
       }
@@ -40,6 +53,17 @@ export function BlogHome() {
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal"></div>
             <p className="mt-4 text-gray-600">Loading blog posts...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-red-700 mb-4">Error Loading Posts</h3>
+            <p className="text-red-600 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-teal text-white rounded-lg hover:bg-teal-dark transition-colors"
+            >
+              Retry
+            </button>
           </div>
         ) : blogPosts.length === 0 ? (
           <div className="text-center py-12">
