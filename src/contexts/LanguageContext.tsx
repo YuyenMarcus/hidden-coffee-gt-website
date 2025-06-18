@@ -22,15 +22,19 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [language, setLanguageState] = useState('en')
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
-    // Get language from localStorage or default to 'en'
+    
+    // Get language from URL search params first, then localStorage, then default to 'en'
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlLang = urlParams.get('lang')
     const storedLang = localStorage.getItem('language') || 'en'
-    setLanguageState(storedLang)
+    const finalLang = urlLang || storedLang || 'en'
+    
+    setLanguageState(finalLang)
   }, [])
 
   const setLanguage = (lang: string) => {
