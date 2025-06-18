@@ -6,7 +6,8 @@ import gsap from 'gsap'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
 
-// Instagram posts without embedded links - images are display only
+// IMPORTANT: Instagram posts are DISPLAY ONLY - NO CLICKABLE LINKS
+// This was updated to remove embedded links from images
 const instagramPosts = [
   {
     image: '/images/instagram/post-1.jpg',
@@ -78,7 +79,7 @@ export function Instagram() {
             >
               <Image
                 src={post.image}
-                alt="Instagram post"
+                alt="Instagram post - display only"
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
