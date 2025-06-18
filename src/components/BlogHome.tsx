@@ -16,6 +16,19 @@ export function BlogHome() {
         setLoading(true)
         setError(null)
         
+        // First test the Notion connection
+        console.log('📝 BlogHome: Testing Notion connection...')
+        const testResponse = await fetch('/api/test-notion')
+        const testData = await testResponse.json()
+        console.log('📝 BlogHome: Notion test result:', testData)
+        
+        if (!testData.success) {
+          setError(`Notion Connection Failed: ${testData.error}`)
+          setLoading(false)
+          return
+        }
+        
+        console.log('📝 BlogHome: Notion connection successful, fetching blog posts...')
         const response = await fetch('/api/blog')
         console.log('📝 BlogHome: API response status:', response.status)
         

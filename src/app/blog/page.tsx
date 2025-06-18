@@ -27,7 +27,7 @@ export default async function BlogPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog & Vlog</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog & News</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Discover our latest coffee adventures, brewing tips, and behind-the-scenes content
           </p>
@@ -113,7 +113,7 @@ export default async function BlogPage() {
 
 export async function generateMetadata() {
   return {
-    title: 'Blog & Vlog - Hidden Coffee GT',
+    title: 'Blog & News - Hidden Coffee GT',
     description: 'Discover our latest coffee adventures, brewing tips, and behind-the-scenes content',
   }
 } 
