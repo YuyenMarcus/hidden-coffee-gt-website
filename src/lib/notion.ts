@@ -110,7 +110,15 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
           case 'code':
             return `<pre><code>${convertRichTextToHtml(block.code.rich_text)}</code></pre>`
           case 'image':
-            return `<img src="${block.image.external?.url || block.image.file?.url}" alt="Blog image" class="w-full h-auto rounded-lg" />`
+            const imageUrl = block.image.external?.url || block.image.file?.url
+            if (imageUrl) {
+              // Proxy Notion images through our API to avoid expiring URLs
+              const proxiedUrl = imageUrl.includes('notion.so') || imageUrl.includes('amazonaws.com')
+                ? `/api/notion-image?url=${encodeURIComponent(imageUrl)}`
+                : imageUrl
+              return `<img src="${proxiedUrl}" alt="Blog image" class="w-full h-auto rounded-lg" />`
+            }
+            return ''
           default:
             return ''
         }

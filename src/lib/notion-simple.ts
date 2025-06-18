@@ -128,7 +128,17 @@ export function getPeople(property: any): string[] {
 // Helper function to get files from property
 export function getFiles(property: any): string[] {
   const filesArray = getPropertyValue(property, 'files')
-  return filesArray?.map((file: any) => file.external?.url || file.file?.url).filter(Boolean) || []
+  return filesArray?.map((file: any) => {
+    const originalUrl = file.external?.url || file.file?.url
+    if (!originalUrl) return null
+    
+    // Proxy Notion images through our API to avoid expiring URLs
+    if (originalUrl.includes('notion.so') || originalUrl.includes('amazonaws.com')) {
+      return `/api/notion-image?url=${encodeURIComponent(originalUrl)}`
+    }
+    
+    return originalUrl
+  }).filter(Boolean) || []
 }
 
 // Helper function to detect if a file is a video
