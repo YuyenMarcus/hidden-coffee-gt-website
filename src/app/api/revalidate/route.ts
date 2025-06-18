@@ -42,16 +42,24 @@ export async function GET() {
   try {
     console.log('🔄 Manual revalidation triggered')
     
+    // Revalidate all blog-related paths and tags
     revalidatePath('/blog')
     revalidatePath('/blog-simple')
+    revalidatePath('/admin')
     revalidateTag('blog-posts')
+    
+    // Force revalidation of all dynamic routes
+    revalidatePath('/blog/[slug]')
+    revalidatePath('/blog-simple/[id]')
     
     console.log('✅ Manual revalidation completed')
     
     return NextResponse.json({ 
       success: true, 
       message: 'Manual revalidation completed',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      revalidatedPaths: ['/blog', '/blog-simple', '/admin'],
+      revalidatedTags: ['blog-posts']
     })
   } catch (error) {
     console.error('❌ Manual revalidation error:', error)
