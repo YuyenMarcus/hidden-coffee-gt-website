@@ -6,27 +6,14 @@ import gsap from 'gsap'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
 
-// IMPORTANT: Instagram posts are DISPLAY ONLY - NO CLICKABLE LINKS
-// This was updated to remove embedded links from images
-const instagramPosts = [
-  {
-    image: '/images/instagram/post-1.jpg',
-  },
-  {
-    image: '/images/instagram/post-2.jpg',
-  },
-  {
-    image: '/images/instagram/post-3.jpg',
-  },
-  {
-    image: '/images/instagram/post-4.jpg',
-  },
-  {
-    image: '/images/instagram/post-5.jpg',
-  },
-  {
-    image: '/images/instagram/post-6.jpg',
-  },
+// CACHE BUSTING UPDATE: Instagram images are DISPLAY ONLY - NO LINKS
+const instagramImages = [
+  '/images/instagram/post-1.jpg',
+  '/images/instagram/post-2.jpg',
+  '/images/instagram/post-3.jpg',
+  '/images/instagram/post-4.jpg',
+  '/images/instagram/post-5.jpg',
+  '/images/instagram/post-6.jpg',
 ]
 
 export function Instagram() {
@@ -68,23 +55,19 @@ export function Instagram() {
         </div>
 
         <div className="instagram-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-          {instagramPosts.map((post, index) => (
-            <motion.div
-              key={index}
+          {instagramImages.map((imageSrc, index) => (
+            <div
+              key={`instagram-${index}-${Date.now()}`}
               className="instagram-item relative aspect-square overflow-hidden rounded-lg group"
-              whileHover={{ scale: 1.02 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Image
-                src={post.image}
-                alt="Instagram post - display only"
+                src={imageSrc}
+                alt={`Instagram post ${index + 1} - display only`}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
