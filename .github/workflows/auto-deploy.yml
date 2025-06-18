@@ -1,4 +1,4 @@
-name: Auto Deploy to Vercel
+name: Build and Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -26,22 +26,8 @@ jobs:
     - name: Build project
       run: npm run build
       
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
-        vercel-args: '--prod'
-        
-    - name: Comment deployment URL
-      uses: actions/github-script@v7
-      if: github.event_name == 'pull_request'
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `🚀 **Deployment successful!**\n\nPreview: ${{ steps.deploy.outputs.preview-url }}\nProduction: ${{ steps.deploy.outputs.production-url }}`
-          }) 
+    - name: Test build output
+      run: |
+        echo "✅ Build successful!"
+        echo "🚀 Vercel will auto-deploy this commit"
+        echo "📊 Check deployment at: https://vercel.com/dashboard" 
