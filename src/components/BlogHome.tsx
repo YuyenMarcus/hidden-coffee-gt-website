@@ -1,62 +1,30 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import gsap from 'gsap'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { Media } from './Media'
-import { getDatabase, getTitle, getRichText, getDate, getMultiSelect, getSelect, getPeople, getFiles, getStatus } from '@/lib/notion-simple'
 
-// Server-side function to get blog posts
-async function getBlogPosts() {
-  try {
-    console.log('📝 Fetching blog posts for home page...')
-    const notionPosts = await getDatabase()
-    console.log('📝 Found', notionPosts.length, 'posts from Notion')
-    
-    return notionPosts.map((post: any) => {
-      const properties = post.properties
-      
-      // Get the text content from the Text property
-      const textContent = getRichText(properties.Text) || ''
-      
-      // Create excerpt from text content (first 150 characters)
-      const excerpt = textContent.substring(0, 150) + (textContent.length > 150 ? '...' : '')
-      
-      // Get images from the files property
-      const images = getFiles(properties.images)
-      const firstImageFromFiles = images.length > 0 ? images[0] : null
-      
-      return {
-        id: post.id,
-        title: getTitle(properties.Title),
-        excerpt: excerpt || 'No content available',
-        content: textContent, // Full text content
-        date: getDate(properties.PublishedDate),
-        image: firstImageFromFiles || '/images/blog/workshop.jpg',
-        images: images, // All media files
-        category: getSelect(properties.Category) || 'General',
-        author: getPeople(properties.Author).join(', ') || 'Unknown',
-        tags: getMultiSelect(properties.Tags),
-        status: getStatus(properties.Status),
+export function BlogHome() {
+  const [blogPosts, setBlogPosts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('/api/blog')
+        if (response.ok) {
+          const posts = await response.json()
+          setBlogPosts(posts)
+        }
+      } catch (error) {
+        console.error('Error fetching blog posts:', error)
+      } finally {
+        setLoading(false)
       }
-    })
-  } catch (error) {
-    console.error('❌ Error fetching blog posts:', error)
-    return []
-  }
-}
+    }
 
-export async function Blog() {
-  let blogPosts: any[] = []
-  
-  try {
-    blogPosts = await getBlogPosts()
-  } catch (error) {
-    console.error('❌ Error in Blog component:', error)
-    blogPosts = []
-  }
+    fetchPosts()
+  }, [])
 
   return (
     <section className="py-12 md:py-24 bg-gray-50">
@@ -68,7 +36,12 @@ export async function Blog() {
           </p>
         </div>
 
-        {blogPosts.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal"></div>
+            <p className="mt-4 text-gray-600">Loading blog posts...</p>
+          </div>
+        ) : blogPosts.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">No blog posts available</h3>
             <p className="text-gray-600 mb-8 px-4">Check back soon for our latest content!</p>
