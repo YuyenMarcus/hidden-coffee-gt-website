@@ -43,13 +43,13 @@ export default function DebugPage() {
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal"></div>
             <p className="mt-4">Running tests...</p>
-          </div>
-        ) : (
+            </div>
+          ) : (
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Notion Connection Test</h2>
             
             {testResult?.success ? (
-              <div className="space-y-4">
+            <div className="space-y-4">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <h3 className="text-green-800 font-semibold">✅ Connection Successful</h3>
                   <p className="text-green-700">Found {testResult.testResponse.postCount} posts</p>
@@ -84,12 +84,12 @@ export default function DebugPage() {
                     <li>Check that your database has the correct properties</li>
                   </ol>
                 </div>
-              </div>
-            )}
+            </div>
+          )}
             
             <div className="mt-6 text-sm text-gray-500">
               <p><strong>Test Time:</strong> {testResult?.timestamp}</p>
-            </div>
+        </div>
           </div>
         )}
       </div>

@@ -40,8 +40,8 @@ const getCachedPosts = unstable_cache(
           status: getStatus(properties.Status),
         }
       })
-    } catch (error) {
-      console.error('Error fetching posts:', error)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
       return []
     }
   },
