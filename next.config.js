@@ -5,6 +5,22 @@ const nextConfig = {
     serverComponentsExternalPackages: [],
   },
   
+  // Redirect old blog routes to new blog-simple route
+  async redirects() {
+    return [
+      {
+        source: '/blog',
+        destination: '/blog-simple',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug*',
+        destination: '/blog-simple',
+        permanent: true,
+      },
+    ]
+  },
+  
   images: {
     remotePatterns: [
       {
