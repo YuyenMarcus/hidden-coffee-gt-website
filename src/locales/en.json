@@ -1,0 +1,45 @@
+{
+  "header": {
+    "menu": "Menu",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "tagline": "The place where bold coffee meets good vibes",
+    "findUs": "FIND US",
+    "hours": "OUR HOURS",
+    "daily": "Daily",
+    "scrollDown": "Scroll Down"
+  },
+  "menu": {
+    "title": "OUR MENU",
+    "description": "Discover our carefully crafted selection of coffee drinks, made with locally sourced beans and served with passion.",
+    "hot": "Hot",
+    "cold": "Cold",
+    "readMore": "Read More",
+    "espresso_desc": "A rich, concentrated shot of pure coffee perfection",
+    "cappuccino_desc": "Equal parts espresso, steamed milk, and frothy foam",
+    "latte_desc": "Smooth espresso blended with steamed milk, topped with light foam",
+    "mocha_desc": "Espresso with a chocolate twist, topped with whipped cream",
+    "iced_americano_desc": "Refreshing espresso diluted with chilled water",
+    "cold_brew_desc": "Smooth, slow-steeped coffee served over ice"
+  },
+  "blog": {
+    "title": "LATEST NEWS",
+    "description": "Stay updated with the latest happenings, events, and stories from Hidden Coffee GT.",
+    "backToHome": "Back to Home",
+    "backToBlog": "Back to Blog/News",
+    "loading": "Loading posts...",
+    "noPosts": "No posts yet",
+    "checkBackSoon": "Check back soon for our latest content!"
+  },
+  "instagram": {
+    "title": "CHECK US OUT ON INSTAGRAM"
+  },
+  "footer": {
+    "hours": "Hours",
+    "contact": "Contact",
+    "location": "Location",
+    "copyright": "Hidden Coffee GT © {year} - A coffee shop in Panajachel, Guatemala"
+  }
+} 

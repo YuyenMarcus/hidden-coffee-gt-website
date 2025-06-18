@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-teal: 0 128 128;
+    --color-white: 255 255 255;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+  }
+
+  /* Mobile-specific improvements */
+  @media (max-width: 768px) {
+    /* Improve touch targets */
+    button, a {
+      @apply min-h-[44px] min-w-[44px];
+    }
+    
+    /* Better text readability on mobile */
+    p {
+      @apply leading-relaxed;
+    }
+    
+    /* Improve scrolling performance */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-teal text-white hover:bg-teal-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-teal border-teal hover:bg-teal hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal;
+  }
+
+  .section-heading {
+    @apply font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6;
+  }
+
+  .section-label {
+    @apply text-sm font-semibold text-teal uppercase tracking-wider mb-2;
+  }
+
+  /* Mobile-optimized section spacing */
+  .section-mobile {
+    @apply py-8 md:py-12 lg:py-16;
+  }
+
+  /* Mobile-friendly grid layouts */
+  .grid-mobile {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8;
+  }
+}
+
+/* Custom animations */
+.hero-image-wrapper {
+  @apply transform -rotate-5 transition-transform duration-300 ease-in-out overflow-hidden rounded-2xl;
+}
+
+.hero-image-wrapper-right {
+  @apply transform rotate-5 transition-transform duration-300 ease-in-out overflow-hidden rounded-2xl;
+}
+
+.hero-image-wrapper:hover,
+.hero-image-wrapper-right:hover {
+  @apply rotate-0;
+}
+
+.hero-image {
+  @apply transition-transform duration-500 ease-in-out;
+}
+
+.hero-image:hover {
+  @apply scale-105;
+}
+
+/* Mobile-optimized hero animations */
+@media (max-width: 768px) {
+  .hero-image-wrapper,
+  .hero-image-wrapper-right {
+    @apply rotate-0;
+  }
+  
+  .hero-image:hover {
+    @apply scale-100;
+  }
+}
+
+/* Tab animations */
+.tab-link {
+  @apply relative transition-colors duration-300 ease-in-out;
+}
+
+.tab-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-teal transition-all duration-300 ease-in-out;
+}
+
+.tab-link.active::after,
+.tab-link:hover::after {
+  @apply w-full;
+}
+
+.tab-content {
+  @apply opacity-0 h-0 overflow-hidden transition-opacity duration-500 ease-in-out;
+}
+
+.tab-content.active {
+  @apply opacity-100 h-auto;
+}
+
+/* Menu item animations */
+.menu-item {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.menu-item:hover {
+  @apply -translate-y-1 shadow-lg;
+}
+
+/* Mobile-optimized menu animations */
+@media (max-width: 768px) {
+  .menu-item:hover {
+    @apply translate-y-0 shadow-md;
+  }
+}
+
+/* Instagram grid animations */
+.instagram-item {
+  @apply overflow-hidden;
+}
+
+.instagram-image {
+  @apply transition-transform duration-500 ease-in-out;
+}
+
+.instagram-item:hover .instagram-image {
+  @apply scale-110;
+}
+
+/* Mobile-optimized Instagram animations */
+@media (max-width: 768px) {
+  .instagram-item:hover .instagram-image {
+    @apply scale-105;
+  }
+}
+
+/* Mobile menu animations */
+.mobile-menu {
+  @apply fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out;
+}
+
+.mobile-menu.open {
+  @apply translate-x-0;
+}
+
+.mobile-menu:not(.open) {
+  @apply translate-x-full;
+}
+
+/* Scroll animations */
+.animate-on-scroll {
+  @apply opacity-0 translate-y-4 transition-all duration-700 ease-out;
+}
+
+.animate-on-scroll.visible {
+  @apply opacity-100 translate-y-0;
+}
+
+/* Mobile-optimized scroll animations */
+@media (max-width: 768px) {
+  .animate-on-scroll {
+    @apply opacity-100 translate-y-0;
+  }
+} 

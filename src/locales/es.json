@@ -1,0 +1,45 @@
+{
+  "header": {
+    "menu": "Menú",
+    "about": "Nosotros",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "tagline": "El lugar donde el café audaz se encuentra con buenas vibras",
+    "findUs": "ENCUÉNTRANOS",
+    "hours": "HORARIO",
+    "daily": "Diario",
+    "scrollDown": "Desplazarse hacia abajo"
+  },
+  "menu": {
+    "title": "NUESTRO MENÚ",
+    "description": "Descubre nuestra selección cuidadosamente elaborada de bebidas de café, preparadas con granos de origen local y servidas con pasión.",
+    "hot": "Calientes",
+    "cold": "Fríos",
+    "readMore": "Leer Más",
+    "espresso_desc": "Un shot rico y concentrado de pura perfección cafetera",
+    "cappuccino_desc": "Partes iguales de espresso, leche vaporizada y espuma cremosa",
+    "latte_desc": "Espresso suave mezclado con leche vaporizada, coronado con espuma ligera",
+    "mocha_desc": "Espresso con un toque de chocolate, coronado con crema batida",
+    "iced_americano_desc": "Espresso refrescante diluido con agua fría",
+    "cold_brew_desc": "Café suave, infusionado lentamente, servido sobre hielo"
+  },
+  "blog": {
+    "title": "ÚLTIMAS NOTICIAS",
+    "description": "Mantente actualizado con los últimos acontecimientos, eventos e historias de Hidden Coffee GT.",
+    "backToHome": "Volver al Inicio",
+    "backToBlog": "Volver a Blog/Noticias",
+    "loading": "Cargando publicaciones...",
+    "noPosts": "Aún no hay publicaciones",
+    "checkBackSoon": "¡Vuelve pronto para ver nuestro último contenido!"
+  },
+  "instagram": {
+    "title": "SÍGUENOS EN INSTAGRAM"
+  },
+  "footer": {
+    "hours": "Horario",
+    "contact": "Contacto",
+    "location": "Ubicación",
+    "copyright": "Hidden Coffee GT © {year} - Una cafetería en Panajachel, Guatemala"
+  }
+} 
