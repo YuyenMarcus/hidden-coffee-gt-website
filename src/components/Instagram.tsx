@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
 
+// Instagram posts without embedded links - images are display only
 const instagramPosts = [
   {
     image: '/images/instagram/post-1.jpg',
