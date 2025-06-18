@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Comment out static export for ISR support
-  // output: 'export',        // Required for static export
-  // trailingSlash: true,     // Helps with static hosting
+  // Ensure ISR works on Vercel
+  experimental: {
+    serverComponentsExternalPackages: [],
+  },
   
   images: {
-    unoptimized: true,     // Required for static export
     remotePatterns: [
       {
         protocol: 'https',
