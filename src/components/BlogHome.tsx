@@ -1,56 +1,22 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Media } from './Media'
+import { getAllBlogPosts } from '@/lib/notion'
+import { format } from 'date-fns'
+import { unstable_cache } from 'next/cache'
 
-export function BlogHome() {
-  const [blogPosts, setBlogPosts] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+// Cache the blog posts with a tag for revalidation
+const getCachedBlogPosts = unstable_cache(
+  async () => {
+    return await getAllBlogPosts()
+  },
+  ['blog-posts-home'],
+  {
+    tags: ['blog-posts'],
+    revalidate: 60
+  }
+)
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        console.log('📝 BlogHome: Fetching posts from API...')
-        setLoading(true)
-        setError(null)
-        
-        // First test the Notion connection
-        console.log('📝 BlogHome: Testing Notion connection...')
-        const testResponse = await fetch('/api/test-notion')
-        const testData = await testResponse.json()
-        console.log('📝 BlogHome: Notion test result:', testData)
-        
-        if (!testData.success) {
-          setError(`Notion Connection Failed: ${testData.error}`)
-          setLoading(false)
-          return
-        }
-        
-        console.log('📝 BlogHome: Notion connection successful, fetching blog posts...')
-        const response = await fetch('/api/blog')
-        console.log('📝 BlogHome: API response status:', response.status)
-        
-        if (response.ok) {
-          const posts = await response.json()
-          console.log('📝 BlogHome: Received posts:', posts.length, posts)
-          setBlogPosts(posts)
-        } else {
-          const errorData = await response.json()
-          console.error('📝 BlogHome: API error:', errorData)
-          setError(`API Error: ${errorData.error || response.statusText}`)
-        }
-      } catch (error) {
-        console.error('📝 BlogHome: Fetch error:', error)
-        setError(`Network Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPosts()
-  }, [])
+export async function BlogHome() {
+  const posts = await getCachedBlogPosts()
 
   return (
     <section className="py-12 md:py-24 bg-gray-50">
@@ -62,23 +28,7 @@ export function BlogHome() {
           </p>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal"></div>
-            <p className="mt-4 text-gray-600">Loading blog posts...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-semibold text-red-700 mb-4">Error Loading Posts</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-teal text-white rounded-lg hover:bg-teal-dark transition-colors"
-            >
-              Retry
-            </button>
-          </div>
-        ) : blogPosts.length === 0 ? (
+        {posts.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">No blog posts available</h3>
             <p className="text-gray-600 mb-8 px-4">Check back soon for our latest content!</p>
@@ -97,52 +47,93 @@ export function BlogHome() {
           </div>
         ) : (
           <div className="blog-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {blogPosts.map((post, index) => (
+            {posts.slice(0, 3).map((post) => (
               <article
-                key={post.id || index}
+                key={post.id}
                 className="blog-item bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="relative h-48">
-                  <Media
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full"
-                    fit="cover"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-teal text-white text-sm font-medium rounded-full">
-                      {post.category}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4 md:p-6">
-                  <time className="text-sm text-gray-500">{post.date}</time>
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mt-2 mb-3">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 text-sm md:text-base">{post.excerpt}</p>
-                  <Link
-                    href={`/blog-simple/${post.id}/`}
-                    className="inline-flex items-center text-teal hover:text-teal-dark font-medium"
-                  >
-                    Read More
-                    <svg
-                      className="w-4 h-4 ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
+                <Link href={`/blog/${post.slug}`}>
+                  <div className="relative h-48">
+                    {post.coverImage ? (
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover"
                       />
-                    </svg>
-                  </Link>
-                </div>
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No image</span>
+                      </div>
+                    )}
+                    {post.videoUrl && (
+                      <div className="absolute top-4 right-4">
+                        <div className="bg-red-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                          Video
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4 md:p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <time className="text-sm text-gray-500">
+                        {format(new Date(post.publishedDate), 'MMM dd, yyyy')}
+                      </time>
+                      {post.tags.length > 0 && (
+                        <span className="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
+                          {post.tags[0]}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-lg md:text-xl font-semibold text-gray-900 mt-2 mb-3 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 text-sm md:text-base line-clamp-3">
+                      {post.description}
+                    </p>
+                    <div className="flex items-center text-teal-600 font-medium">
+                      Read More
+                      <svg
+                        className="w-4 h-4 ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
               </article>
             ))}
+          </div>
+        )}
+        
+        {posts.length > 3 && (
+          <div className="text-center mt-8">
+            <Link
+              href="/blog"
+              className="inline-flex items-center px-6 py-3 bg-teal text-white font-medium rounded-lg hover:bg-teal-dark transition-colors"
+            >
+              View All Posts
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </Link>
           </div>
         )}
       </div>

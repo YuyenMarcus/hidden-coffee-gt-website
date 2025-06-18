@@ -1,27 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ensure ISR works on Vercel
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
-  
-  // Redirect old blog routes to new blog-simple route
-  async redirects() {
-    return [
-      {
-        source: '/blog',
-        destination: '/blog-simple',
-        permanent: true,
-      },
-      {
-        source: '/blog/:slug*',
-        destination: '/blog-simple',
-        permanent: true,
-      },
-    ]
-  },
+  // Comment out static export for ISR support
+  // output: 'export',        // Required for static export
+  // trailingSlash: true,     // Helps with static hosting
   
   images: {
+    unoptimized: true,     // Required for static export
     remotePatterns: [
       {
         protocol: 'https',

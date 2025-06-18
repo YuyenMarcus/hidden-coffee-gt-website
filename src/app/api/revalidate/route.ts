@@ -11,11 +11,13 @@ export async function POST(request: NextRequest) {
     console.log('🔄 Revalidation webhook triggered:', body)
     
     // Revalidate the blog pages
+    revalidatePath('/blog')
     revalidatePath('/blog-simple')
     revalidateTag('blog-posts')
     
     // Also revalidate individual blog post pages
     if (body.page && body.page.id) {
+      revalidatePath(`/blog/${body.page.id}`)
       revalidatePath(`/blog-simple/${body.page.id}`)
     }
     
@@ -41,11 +43,13 @@ export async function GET() {
     console.log('🔄 Manual revalidation triggered')
     
     // Revalidate all blog-related paths and tags
+    revalidatePath('/blog')
     revalidatePath('/blog-simple')
     revalidatePath('/admin')
     revalidateTag('blog-posts')
     
     // Force revalidation of all dynamic routes
+    revalidatePath('/blog/[slug]')
     revalidatePath('/blog-simple/[id]')
     
     console.log('✅ Manual revalidation completed')
@@ -54,7 +58,7 @@ export async function GET() {
       success: true, 
       message: 'Manual revalidation completed',
       timestamp: new Date().toISOString(),
-      revalidatedPaths: ['/blog-simple', '/admin'],
+      revalidatedPaths: ['/blog', '/blog-simple', '/admin'],
       revalidatedTags: ['blog-posts']
     })
   } catch (error) {

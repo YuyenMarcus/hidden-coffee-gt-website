@@ -40,8 +40,8 @@ const getCachedPosts = unstable_cache(
           status: getStatus(properties.Status),
         }
       })
-      } catch (error) {
-        console.error('Error fetching posts:', error)
+    } catch (error) {
+      console.error('Error fetching posts:', error)
       return []
     }
   },
@@ -70,7 +70,7 @@ export default async function BlogSimplePage() {
               </svg>
               Back to Home
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Blog & News</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Blog & Vlog</h1>
             <div className="w-20"></div> {/* Spacer for centering */}
           </div>
         </div>

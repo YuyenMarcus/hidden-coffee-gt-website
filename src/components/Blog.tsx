@@ -42,8 +42,8 @@ async function getBlogPosts() {
         status: getStatus(properties.Status),
       }
     })
-    } catch (error) {
-      console.error('❌ Error fetching blog posts:', error)
+  } catch (error) {
+    console.error('❌ Error fetching blog posts:', error)
     return []
   }
 }

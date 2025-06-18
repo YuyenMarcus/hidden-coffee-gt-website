@@ -76,10 +76,16 @@ export default function AdminPage() {
               <h2 className="text-lg font-semibold text-gray-900 mb-2">Quick Links</h2>
               <div className="space-y-2">
                 <a 
+                  href="/blog" 
+                  className="block text-blue-600 hover:text-blue-800 transition-colors"
+                >
+                  → View Blog Page
+                </a>
+                <a 
                   href="/blog-simple" 
                   className="block text-blue-600 hover:text-blue-800 transition-colors"
                 >
-                  → View Blog & News Page
+                  → View Simple Blog Page
                 </a>
                 <a 
                   href="/api/revalidate" 
