@@ -3,7 +3,7 @@ import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { BlogHome } from '@/components/BlogHome'
 import { Menu } from '@/components/Menu'
-import { Instagram } from '@/components/Instagram'
+import { InstagramGallery } from '@/components/InstagramGallery'
 import { Footer } from '@/components/Footer'
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Menu />
-      <Instagram />
+      <InstagramGallery />
       <BlogHome />
       <Footer />
     </main>
