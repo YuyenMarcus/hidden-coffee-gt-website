@@ -6,13 +6,13 @@ import { Menu } from '@/components/Menu'
 import { Instagram } from '@/components/Instagram'
 import { Footer } from '@/components/Footer'
 
-export default function Home() {
+export default async function Home() {
   console.log('🏠 Home page is being rendered')
   return (
     <main className="min-h-screen">
       <Header />
       <Hero />
-      <Blog key={Date.now()} />
+      <Blog />
       <Menu />
       <Instagram />
       <Footer />

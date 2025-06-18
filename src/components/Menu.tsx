@@ -25,8 +25,8 @@ const menuItems = [
       {
         name: 'Latte',
         description: 'latte_desc',
-        price: 4.00,
-        image: '/images/menu/latte.jpg',
+        price: 4.50,
+        image: '/images/menu/Latte.jpg',
       },
       {
         name: 'Mocha',

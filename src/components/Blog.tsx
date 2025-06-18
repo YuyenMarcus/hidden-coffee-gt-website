@@ -6,138 +6,59 @@ import gsap from 'gsap'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Media } from './Media'
-import { getDatabase } from '@/lib/notion-simple'
+import { getDatabase, getTitle, getRichText, getDate, getMultiSelect, getSelect, getPeople, getFiles, getStatus } from '@/lib/notion-simple'
 
-export function Blog() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { translations } = useLanguage()
-  const [blogPosts, setBlogPosts] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
-
-  console.log('📝 Blog component is being rendered')
-
-  const fetchBlogPosts = async () => {
-    try {
-      console.log('📝 Fetching blog posts...')
-      setLoading(true)
+// Server-side function to get blog posts
+async function getBlogPosts() {
+  try {
+    const notionPosts = await getDatabase()
+    return notionPosts.map((post: any) => {
+      const properties = post.properties
       
-      // Try API first, fallback to direct Notion fetch
-      let notionPosts = []
+      // Get the text content from the Text property
+      const textContent = getRichText(properties.Text) || ''
       
-      try {
-        const response = await fetch('/api/blog')
-        if (response.ok) {
-          notionPosts = await response.json()
-          console.log('📝 API response received:', notionPosts)
-        } else {
-          throw new Error('API not available')
-        }
-      } catch (apiError) {
-        console.log('📝 API not available, trying direct Notion fetch...')
-        // Fallback to direct Notion fetch for static export
-        try {
-          notionPosts = await getDatabase()
-          console.log('📝 Direct Notion response received:', notionPosts)
-        } catch (directError) {
-          console.error('❌ Both API and direct fetch failed:', directError)
-          notionPosts = []
-        }
+      // Create excerpt from text content (first 150 characters)
+      const excerpt = textContent.substring(0, 150) + (textContent.length > 150 ? '...' : '')
+      
+      // Get images from the files property
+      const images = getFiles(properties.images)
+      const firstImageFromFiles = images.length > 0 ? images[0] : null
+      
+      return {
+        id: post.id,
+        title: getTitle(properties.Title),
+        excerpt: excerpt || 'No content available',
+        content: textContent, // Full text content
+        date: getDate(properties.PublishedDate),
+        image: firstImageFromFiles || '/images/blog/workshop.jpg',
+        images: images, // All media files
+        category: getSelect(properties.Category) || 'General',
+        author: getPeople(properties.Author).join(', ') || 'Unknown',
+        tags: getMultiSelect(properties.Tags),
+        status: getStatus(properties.Status),
       }
-      
-      if (notionPosts && notionPosts.length > 0) {
-        console.log('📝 Setting', notionPosts.length, 'posts')
-        setBlogPosts(notionPosts)
-        setLastUpdated(new Date())
-      } else {
-        console.log('📝 No posts found')
-        setBlogPosts([])
-      }
-    } catch (error) {
-      console.error('❌ Error fetching blog posts:', error)
-      setBlogPosts([])
-    } finally {
-      setLoading(false)
-    }
+    })
+  } catch (error) {
+    console.error('Error fetching blog posts:', error)
+    return []
   }
+}
 
-  useEffect(() => {
-    fetchBlogPosts()
-    
-    // Set up auto-refresh every 5 minutes (300,000 ms)
-    const interval = setInterval(() => {
-      console.log('📝 Auto-refreshing blog posts...')
-      fetchBlogPosts()
-    }, 5 * 60 * 1000) // 5 minutes
-    
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    // Temporarily disable GSAP animations for debugging
-    /*
-    const ctx = gsap.context(() => {
-      gsap.from('.blog-item', {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.blog-grid',
-          start: 'top bottom-=100',
-          toggleActions: 'play none none reverse',
-        },
-      })
-    }, containerRef)
-
-    return () => ctx.revert()
-    */
-  }, [])
+export async function Blog() {
+  const blogPosts = await getBlogPosts()
 
   return (
     <section className="py-12 md:py-24 bg-gray-50">
       <div className="container px-4">
         <div className="text-center mb-8 md:mb-16">
-          <h2 className="section-heading">{translations.blog.title}</h2>
+          <h2 className="section-heading">Blog & News</h2>
           <p className="text-gray-600 mt-4 max-w-2xl mx-auto px-4">
-            {translations.blog.description}
+            Discover our latest coffee adventures, brewing tips, and behind-the-scenes content
           </p>
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={fetchBlogPosts}
-              disabled={loading}
-              className="px-4 py-2 bg-teal text-white rounded-lg hover:bg-teal-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Refreshing...
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  Refresh Posts
-                </>
-              )}
-            </button>
-            {lastUpdated && (
-              <span className="text-sm text-gray-500">
-                Last updated: {lastUpdated.toLocaleTimeString()}
-              </span>
-            )}
-          </div>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal"></div>
-            <p className="mt-4 text-gray-600">Loading blog posts...</p>
-          </div>
-        ) : blogPosts.length === 0 ? (
+        {blogPosts.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">No blog posts available</h3>
             <p className="text-gray-600 mb-8 px-4">Check back soon for our latest content!</p>
@@ -184,7 +105,7 @@ export function Blog() {
                     href={`/blog-simple/${post.id}/`}
                     className="inline-flex items-center text-teal hover:text-teal-dark font-medium"
                   >
-                    {translations.menu.readMore}
+                    Read More
                     <svg
                       className="w-4 h-4 ml-2"
                       fill="none"
