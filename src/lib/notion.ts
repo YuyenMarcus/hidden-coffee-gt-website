@@ -36,12 +36,37 @@ export function convertRichTextToHtml(richText: any[]): string {
 export function convertNotionPageToBlogPost(page: PageObjectResponse): BlogPost {
   const properties = page.properties as Record<string, NotionProperty>
 
+  // Get cover image from page cover or from properties
+  let coverImage = ''
+  
+  // First try to get cover from page cover
+  if (page.cover?.type === 'external') {
+    coverImage = page.cover.external.url
+  } else if (page.cover?.type === 'file') {
+    coverImage = page.cover.file.url
+  }
+  
+  // If no cover found, try to get from properties.images
+  if (!coverImage && properties.images?.type === 'files' && properties.images.files.length > 0) {
+    const firstImage = properties.images.files[0]
+    if ('file' in firstImage) {
+      coverImage = firstImage.file.url
+    } else if ('external' in firstImage) {
+      coverImage = firstImage.external.url
+    }
+  }
+
+  // Proxy Notion images through our API to avoid expiring URLs
+  if (coverImage && (coverImage.includes('notion.so') || coverImage.includes('amazonaws.com'))) {
+    coverImage = `/api/notion-image?url=${encodeURIComponent(coverImage)}`
+  }
+
   return {
     id: page.id,
     slug: page.id, // Use page ID as slug since URL property was removed
     title: getTitle(properties.Title || { type: 'title', title: [] }),
     description: getRichText(properties.Description || { type: 'rich_text', rich_text: [] }),
-    coverImage: '', // Will be handled by images property
+    coverImage: coverImage,
     videoUrl: '', // Video URL property was removed
     publishedDate: getDate(properties.PublishedDate || { type: 'date', date: null }),
     tags: getMultiSelect(properties.Tags || { type: 'multi_select', multi_select: [] }),
