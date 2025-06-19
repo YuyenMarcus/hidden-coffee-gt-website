@@ -20,7 +20,7 @@
     "espresso_desc": "Un shot rico y concentrado de pura perfección cafetera",
     "cappuccino_desc": "Partes iguales de espresso, leche vaporizada y espuma cremosa",
     "latte_desc": "Espresso suave mezclado con leche vaporizada, coronado con espuma ligera",
-    "mocha_desc": "Espresso con un toque de chocolate, coronado con crema batida",
+    "matcha_desc": "Té verde japonés premium, cuidadosamente batido con leche vaporizada",
     "iced_americano_desc": "Espresso refrescante diluido con agua fría",
     "cold_brew_desc": "Café suave, infusionado lentamente, servido sobre hielo"
   },

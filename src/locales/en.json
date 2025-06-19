@@ -20,7 +20,7 @@
     "espresso_desc": "A rich, concentrated shot of pure coffee perfection",
     "cappuccino_desc": "Equal parts espresso, steamed milk, and frothy foam",
     "latte_desc": "Smooth espresso blended with steamed milk, topped with light foam",
-    "mocha_desc": "Espresso with a chocolate twist, topped with whipped cream",
+    "matcha_desc": "Premium Japanese green tea, carefully whisked with steamed milk",
     "iced_americano_desc": "Refreshing espresso diluted with chilled water",
     "cold_brew_desc": "Smooth, slow-steeped coffee served over ice"
   },

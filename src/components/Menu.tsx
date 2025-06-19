@@ -29,10 +29,10 @@ const menuItems = [
         image: '/images/menu/Latte.jpg',
       },
       {
-        name: 'Mocha',
-        description: 'mocha_desc',
+        name: 'Matcha',
+        description: 'matcha_desc',
         price: 4.50,
-        image: '/images/menu/mocha.jpg',
+        image: '/images/menu/matcha.jpg',
       },
     ],
   },
