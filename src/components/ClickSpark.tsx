@@ -21,49 +21,36 @@ interface Spark {
 }
 
 const ClickSpark = ({
-  sparkColor = "#fff",
-  sparkSize = 10,
-  sparkRadius = 15,
-  sparkCount = 8,
-  duration = 400,
+  sparkColor = "#ff0000",
+  sparkSize = 15,
+  sparkRadius = 25,
+  sparkCount = 12,
+  duration = 600,
   easing = "ease-out",
   extraScale = 1.0,
   children
 }: ClickSparkProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparksRef = useRef<Spark[]>([]);     
-  const startTimeRef = useRef<number | null>(null); 
 
+  // Initialize canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const parent = canvas.parentElement;
-    if (!parent) return;
-
-    let resizeTimeout: NodeJS.Timeout;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const resizeCanvas = () => {
-      const { width, height } = parent.getBoundingClientRect();
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-      }
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
-
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeCanvas, 100);
-    };
-
-    const ro = new ResizeObserver(handleResize);
-    ro.observe(parent);
 
     resizeCanvas();
-
+    window.addEventListener('resize', resizeCanvas);
+    
     return () => {
-      ro.disconnect();
-      clearTimeout(resizeTimeout);
+      window.removeEventListener('resize', resizeCanvas);
     };
   }, []);
 
@@ -83,6 +70,7 @@ const ClickSpark = ({
     [easing]
   );
 
+  // Animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -91,10 +79,7 @@ const ClickSpark = ({
 
     let animationId: number;
 
-    const draw = (timestamp: number) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp; 
-      }
+    const animate = (timestamp: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       sparksRef.current = sparksRef.current.filter((spark) => {
@@ -115,7 +100,7 @@ const ClickSpark = ({
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
         ctx.strokeStyle = sparkColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -124,30 +109,27 @@ const ClickSpark = ({
         return true;
       });
 
-      animationId = requestAnimationFrame(draw);
+      animationId = requestAnimationFrame(animate);
     };
 
-    animationId = requestAnimationFrame(draw);
+    animationId = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, [
-    sparkColor,
-    sparkSize,
-    sparkRadius,
-    sparkCount,
-    duration,
-    easeFunc,
-    extraScale,
-  ]);
+  }, [sparkColor, sparkSize, sparkRadius, duration, easeFunc, extraScale]);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    console.log('ClickSpark: Click detected!', e.clientX, e.clientY);
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const rect = container.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+
+    console.log('ClickSpark: Creating sparks at', x, y);
 
     const now = performance.now();
     const newSparks: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
@@ -158,28 +140,30 @@ const ClickSpark = ({
     }));
 
     sparksRef.current.push(...newSparks);
-  };
+    console.log('ClickSpark: Added', sparkCount, 'sparks');
+  }, [sparkCount]);
 
   return (
     <div 
+      ref={containerRef}
       style={{
         position: 'relative',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        cursor: 'pointer'
       }}
       onClick={handleClick}
     >
       <canvas
         ref={canvasRef}
         style={{
-          width: "100%",
-          height: "100%",
-          display: "block",
-          userSelect: "none",
           position: "absolute",
           top: 0,
           left: 0,
-          pointerEvents: "none"
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 1000
         }}
       />
       {children}
