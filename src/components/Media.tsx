@@ -134,7 +134,7 @@ export function Media({ src, alt = '', className = '', width, height, fit = 'con
         width={width}
         height={height}
         className={`object-${fit} rounded-lg`}
-        unoptimized={src.startsWith('http')}
+        unoptimized={src.startsWith('whathttp')}
       />
     </div>
   )
