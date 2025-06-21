@@ -11,11 +11,11 @@ export default function Home() {
   console.log('🏠 Home page is being rendered')
   return (
     <ClickSpark
-      sparkColor='#fff'
-      sparkSize={10}
-      sparkRadius={15}
-      sparkCount={8}
-      duration={400}
+      sparkColor='#0d9488'
+      sparkSize={15}
+      sparkRadius={25}
+      sparkCount={12}
+      duration={600}
     >
       <main className="min-h-screen">
         <Header />
