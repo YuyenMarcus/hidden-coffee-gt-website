@@ -45,13 +45,6 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link
-            href="/blog-simple"
-            className="relative z-50 px-3 py-2 rounded-full border-2 border-teal text-teal hover:bg-teal hover:text-white transition-colors duration-300 font-medium text-sm"
-          >
-            Blog/News
-          </Link>
-          
           <button
             onClick={toggleLanguage}
             className="relative z-50 px-4 py-2 rounded-full border-2 border-teal text-teal hover:bg-teal hover:text-white transition-colors duration-300 font-medium"
@@ -95,14 +88,6 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 md:hidden">
             <div className="container px-4 py-4 space-y-4">
-              <Link
-                href="/blog-simple"
-                className="block px-4 py-3 rounded-lg border-2 border-teal text-teal hover:bg-teal hover:text-white transition-colors duration-300 font-medium text-center"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Blog/News
-              </Link>
-              
               <button
                 onClick={() => {
                   toggleLanguage()
