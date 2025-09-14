@@ -29,10 +29,12 @@ export function Footer() {
             <div className="space-y-1 md:space-y-2 text-gray-600">
               <p>
                 <a
-                  href="mailto:hiddencoffeeGT@nuvio.cloud"
-                  className="hover:text-teal transition-colors break-all"
+                  href="https://instagram.com/hidden_coffee_gt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-teal transition-colors"
                 >
-                  hiddencoffeeGT@nuvio.cloud
+                  {translations.footer.messageUs}
                 </a>
               </p>
             </div>
